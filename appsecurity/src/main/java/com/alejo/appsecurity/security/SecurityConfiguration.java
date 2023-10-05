@@ -1,6 +1,6 @@
 package com.alejo.appsecurity.security;
 
-import org.springframework.cglib.proxy.NoOp;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -8,10 +8,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -38,6 +43,7 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults()).build();
     }
 
+    /*
     //Para crear usuarios en memoria
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
@@ -53,6 +59,16 @@ public class SecurityConfiguration {
                 .build();
         //Retornamos nuestro usuario pasandolos al InMemoryUserDetailsManager
         return new InMemoryUserDetailsManager(admin,user);
+    }*/
+
+    /*Definimos nuestro userDetailsService y registramos nuestro datasource
+    * Para lo cual debemos comentar la implementación en memoria porque ahora lo vamos a manjeta con nuestra bd
+    * Para que esta implementación funcione se debe trabajar con el modelo de BD que suministra Spring Security
+    * Si llegamos a cambiar el nombre de una de la tablas del esquema que suministra Spring Security la autenticación
+    * no va a funcionar, ya que no se logra cargar el AuthenticationManager*/
+    @Bean
+    public UserDetailsService userDetailsService(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     /*Cuando configuramos nuestro ususarios en memoria y queremos realizar una petición con nuestros user y password
@@ -64,6 +80,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
+        //return new BCryptPasswordEncoder();
         return NoOpPasswordEncoder.getInstance();//Lo utilizamos para indicar que no vamos a encriptar nuestra contraseña pero solo para caso de prueba cuando estamos desarrolladno nuestra seguridad desde cero
     }
 
