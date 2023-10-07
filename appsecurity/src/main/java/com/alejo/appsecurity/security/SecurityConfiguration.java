@@ -1,12 +1,14 @@
 package com.alejo.appsecurity.security;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -75,10 +77,15 @@ public class SecurityConfiguration {
     * Debido a que no hemos definido un bean para el PasswordEncoder y encriptar las contraseñas*/
 
     /* Como ahora estamos implementando nuestro PasswordEncoder debemos retirar este Bean
+    * Implementando el Password Encoder que nos suminitra Spring Para implementar este debomos deshabilitar nuestra implementación propia*/
+
+
+
     @Bean
     public PasswordEncoder passwordEncoder(){
-        //return new BCryptPasswordEncoder();
-        return NoOpPasswordEncoder.getInstance();//Lo utilizamos para indicar que no vamos a encriptar nuestra contraseña pero solo para caso de prueba cuando estamos desarrolladno nuestra seguridad desde cero
-    }*/
+        //System.out.println(new BCryptPasswordEncoder().encode("admin"));//Para tener nuestro enconde y guardarlo en bd de mysql solo pruebas
+        return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance();//Lo utilizamos para indicar que no vamos a encriptar nuestra contraseña pero solo para caso de prueba cuando estamos desarrolladno nuestra seguridad desde cero
+    }
 
 }
