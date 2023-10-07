@@ -74,10 +74,11 @@ public class SecurityConfiguration {
     * java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
     * Debido a que no hemos definido un bean para el PasswordEncoder y encriptar las contraseñas*/
 
+    /* Como ahora estamos implementando nuestro PasswordEncoder debemos retirar este Bean
     @Bean
     public PasswordEncoder passwordEncoder(){
         //return new BCryptPasswordEncoder();
         return NoOpPasswordEncoder.getInstance();//Lo utilizamos para indicar que no vamos a encriptar nuestra contraseña pero solo para caso de prueba cuando estamos desarrolladno nuestra seguridad desde cero
-    }
+    }*/
 
 }
